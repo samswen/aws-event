@@ -1,6 +1,6 @@
 {
   "name": "@samwen/aws-event",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "frequently used code to processing aws lambda call input: event context to get data and type as sns, sqs, api gateway, http and test event",
   "main": "src/index.js",
   "repository": "https://github.com/samswen/aws-event.git",

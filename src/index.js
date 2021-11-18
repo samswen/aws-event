@@ -14,7 +14,7 @@ function get_type(event, context) {
     } else if (event.body) {
         return 'sqs';
     } 
-    if (Object.keys(event).length === 0 || (context && context.ClientContext)) {
+    if (Object.keys(event).length === 0 || (context && context.clientContext)) {
         return 'invoke';
     }
     return 'json';
@@ -42,8 +42,8 @@ function get_message(event, context) {
         }
         return message;
     }
-    if (type === 'invoke' && context && context.ClientContext) {
-        return context.ClientContext;
+    if (type === 'invoke' && context && context.clientContext) {
+        return context.clientContext;
     }
     if (type === 'sqs') {
         return get_body(event);
