@@ -5,7 +5,7 @@ module.exports = {
     get_type,
 };
 
-function get_type(event) {
+function get_type(event, context) {
     if (event.Records && Array.isArray(event.Records) && event.Records.length > 0 && event.Records[0].Sns) {
         return 'sns';
     }
@@ -13,12 +13,15 @@ function get_type(event) {
         return 'http';
     } else if (event.body) {
         return 'sqs';
-    }  
+    } 
+    if (context && context.ClientContext) {
+        return 'invoke';
+    }
     return 'json';
 }
 
-function get_message(event) {
-    const type = get_type(event);
+function get_message(event, context) {
+    const type = get_type(event, context);
     if (type === 'sns') {
         return JSON.parse(event.Records[0].Sns.Message);
     }
@@ -38,6 +41,9 @@ function get_message(event) {
             }
         }
         return message;
+    }
+    if (type === 'invoke' && context && context.ClientContext) {
+        return context.ClientContext;
     }
     if (type === 'sqs') {
         return get_body(event);
