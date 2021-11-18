@@ -14,7 +14,7 @@ function get_type(event, context) {
     } else if (event.body) {
         return 'sqs';
     } 
-    if (context && context.ClientContext) {
+    if (Object.keys(event).length === 0 || (context && context.ClientContext)) {
         return 'invoke';
     }
     return 'json';
