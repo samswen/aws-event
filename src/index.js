@@ -6,8 +6,9 @@ module.exports = {
 };
 
 function get_type(event, context) {
-    if (event.Records && Array.isArray(event.Records) && event.Records.length > 0 && event.Records[0].Sns) {
-        return 'sns';
+    if (event.Records && Array.isArray(event.Records) && event.Records.length > 0) {
+        if (event.Records[0].Sns) return 'sns';
+        if (event.Records[0].s3) return 's3';
     }
     if (event.queryStringParameters) {
         return 'http';
@@ -23,7 +24,12 @@ function get_type(event, context) {
 function get_message(event, context) {
     const type = get_type(event, context);
     if (type === 'sns') {
-        return JSON.parse(event.Records[0].Sns.Message);
+        const message = JSON.parse(event.Records[0].Sns.Message);
+        if (message.Records) return get_message(message);
+        else return message;
+    }
+    if (type === 's3') {
+        return event.Records[0].s3;
     }
     if (type === 'http') {
         const message = {};
